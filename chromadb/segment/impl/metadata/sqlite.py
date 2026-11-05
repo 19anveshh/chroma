@@ -380,6 +380,17 @@ class SqliteMetadataSegment(MetadataReader):
                     ParameterValue(value),
                     None,
                 )
+            elif isinstance(value, list):
+                # Handle list values (arrays) - store as JSON string in string_value
+                import json
+                q = q.insert(
+                    ParameterValue(id),
+                    ParameterValue(key),
+                    ParameterValue(json.dumps(value)),
+                    None,
+                    None,
+                    None,
+                )
 
         sql, params = get_sql(q)
         sql = sql.replace("INSERT", "INSERT OR REPLACE")
